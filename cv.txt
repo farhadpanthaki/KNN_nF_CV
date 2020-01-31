@@ -1,0 +1,49 @@
+mode<-function(x)return(names(which.max(table(x))))
+n<-5
+
+#KNN
+
+k<-seq(1,11,2)
+
+data<-read.csv("bcw.csv",header=F,sep=",",stringsAsFactors =FALSE,na.strings = "?")
+data<-data[-1]
+
+
+normalize<-function(v){return((v[]-min(v[]))/(max(v[])-min(v[])))}
+
+#To remove NA items
+for(j in 1:nrow(data)){ 
+for(i in 1:ncol(data)){
+if(is.na(data[j,i])==T)data<-data[-j,]}}
+
+#Implement Normalize
+for(i in 1:ncol(data)){
+			data[i]<-normalize(data[i])}
+
+
+shuf<- sample(2,nrow(data),T,c(0.8,0.2))
+
+for(i in 
+
+train<- data[which(shuf==1),]
+test<- data[which(shuf!=1),]
+#Changed for 10 attributes can be generalised as train[,-ncol(data)]
+x_train<- as.matrix(train[,-(ncol(train))])
+y_train<-as.matrix(train[,ncol(train)])
+
+x_test<- as.matrix(test[,-(ncol(test))])
+y_test<-as.matrix(test[,ncol(test)])
+
+y_pred<-matrix(ncol=length(k), nrow=nrow(test))
+
+for(j in 1:nrow(test)){
+			d<-NULL 
+			for(i in 1:nrow(train)){
+					d[i]<-sqrt(sum((x_test[j,]-x_train[i,])^2))}
+for (l in 1:length(k)){
+
+y_pred[j,l]<-mode(y_train[order(d)[1:k[l]]])}}
+
+
+t<-table(as.character(y_test),y_pred[,3])
+	t
