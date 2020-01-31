@@ -1,0 +1,57 @@
+mode<-function(x)return(names(table(x)[table(x)==max(table(x))]))
+data<-read.csv("bcw.csv",header=F,sep=",",stringsAsFactors =FALSE,na.strings = "?")
+data<-data[-1]
+
+
+normalize<-function(v){return((v[]-min(v[]))/(max(v[])-min(v[])))}
+
+#To remove NA items
+for(j in 1:nrow(data)){ 
+for(i in 1:ncol(data)){
+if(is.na(data[j,i])==T)data<-data[-j,]}}
+
+#Implement Normalize
+for(i in 1:ncol(data)){
+			data[i]<-normalize(data[i])}
+
+
+#####				#####			######
+mean_o_accuracy<-NULL
+shuf<- sample(2,nrow(data),T,c(0.8,0.2))
+for(k in seq(1,11,2)){#for loop for putting different k values
+# to implement n fold loop
+#for ( i in 1:n){
+n=5;
+
+all_data<-rbind.data.frame(test,train)  #1 part test 2 to 5 					#parts train
+
+fold_seq<-list(1:floor(nrow(all_data)/n),floor((nrow(all_data))/n)+1:(floor((nrow(all_data))/n)*2,((floor(nrow(all_data)/n))*2)+1:(floor(nrow(all_data)/n))*3,((floor(nrow(all_data)/n))*3)+1:(floor(nrow(all_data)/n))*4,((floor(nrow(all_data)/n))*4)+1:nrow(all_data))
+
+for(s in 1:length(fold_seq)){
+train<-all_data[-(fold_seq[[s]]),]
+test<-all_data[fold_seq[[s]],]
+
+x_train<- train[,-10]
+y_train<-train[,10]
+
+x_test<- test[,-10]
+y_test<-test[,10]
+
+y_pred<-NULL
+for(j in 1:nrow(test)){
+			d<-NULL 
+			for(i in 1:nrow(train)){
+					d[i]<-sqrt(sum((x_test[j,]-x_train[i,])^2))}
+y_pred[j]<-mode(y_train[order(d)[1:k]])}
+
+t<-table(as.character(y_test),y_pred)
+	t
+	o_accuracy[s]<-(t[1]+t[4])/(t[1]+t[2]+t[3]+t[4])
+	}
+	mean_o_accuracy[k]<-sum(o_accuracy)/length(o_accuracy)
+}
+
+which(mean_o_accuracy==max(mean_o_accuracy,na.rm = TRUE))	
+
+
+
