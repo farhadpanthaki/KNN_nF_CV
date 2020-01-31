@@ -27,7 +27,7 @@ test<- data[which(shuf!=1),]
 data<-rbind.data.frame(test,train)
 o_accuracy<-matrix(nrow=n,ncol=length(k))
 for(m in 1:n){
-test<- data[-(floor(nrow(data)*(m-1)/5)+1:floor(nrow(data)*(m/5))),]
+train<- data[-(floor(nrow(data)*(m-1)/5)+1:floor(nrow(data)*(m/5))),]
 test<- data[floor(nrow(data)*(m-1)/5)+1:floor(nrow(data)*(m/5)),]
 
 #Changed for 10 attributes can be generalised as train[,-ncol(data)]
