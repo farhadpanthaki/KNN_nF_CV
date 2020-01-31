@@ -22,11 +22,14 @@ for(i in 1:ncol(data)){
 
 
 shuf<- sample(2,nrow(data),T,c(0.8,0.2))
-
-for(i in 
-
 train<- data[which(shuf==1),]
 test<- data[which(shuf!=1),]
+data<-rbind.data.frame(test,train)
+o_accuracy<-matrix(nrow=n,ncol=length(k))
+for(m in 1:n){
+test<- data[-(floor(nrow(data)*(m-1)/5)+1:floor(nrow(data)*(m/5))),]
+test<- data[floor(nrow(data)*(m-1)/5)+1:floor(nrow(data)*(m/5)),]
+
 #Changed for 10 attributes can be generalised as train[,-ncol(data)]
 x_train<- as.matrix(train[,-(ncol(train))])
 y_train<-as.matrix(train[,ncol(train)])
@@ -35,7 +38,6 @@ x_test<- as.matrix(test[,-(ncol(test))])
 y_test<-as.matrix(test[,ncol(test)])
 
 y_pred<-matrix(ncol=length(k), nrow=nrow(test))
-
 for(j in 1:nrow(test)){
 			d<-NULL 
 			for(i in 1:nrow(train)){
@@ -44,6 +46,15 @@ for (l in 1:length(k)){
 
 y_pred[j,l]<-mode(y_train[order(d)[1:k[l]]])}}
 
-
-t<-table(as.character(y_test),y_pred[,3])
+for (l in 1:length(k)){
+t<-table(as.character(y_test),y_pred[,l])
 	t
+	o_accuracy[m,l]<-(t[1]+t[4])/(t[1]+t[2]+t[3]+t[4])
+	o_accuracy}}
+
+##l is the counter for the different ks and m is the counter for the different folds
+mean_o_accuracy<-NULL
+for( i in 1:length(k)){mean_o_accuracy[i]<-mean(o_accuracy[,i])}
+a<-which(mean_o_accuracy==max(mean_o_accuracy))
+
+print(paste(k[a]))
