@@ -1,0 +1,42 @@
+#getwd()
+
+#Load train and test data
+train_data<-read.csv("train_avlp.csv", stringsAsFactors = FALSE, na.strings="")
+
+test_data<-read.csv("test_avlp.csv", stringsAsFactors = FALSE, na.strings="")
+
+#Display contents of train and test data
+str(train_data)
+str(test_data)
+
+#Make a dataframe of complete data
+all_data<-rbind.data.frame(train_data[,-ncol(train_data)],test_data)
+
+
+for(i in colnames(all_data)){
+		print(paste0(i," ",sum(is.na(all_data[i]))))}
+
+#check if there are NAs in all_data column wise
+missing_val_col <- sapply(colnames(all_data), function(i) sum(is.na(all_data[i])))
+
+#names(which.max(table(all_data["Gender"])))
+
+for(i in colnames(all_data)){
+	if(missing_val_col[i]>0){
+		if(is.character(all_data[,i])){
+			all_data[is.na(all_data[[i]]),i]<-names(which.max							(table(all_data[[i]])))}
+		else{all_data[is.na(all_data[[i]]),i]<-mean(all_data[[i]], 			na.rm=T)}}}
+
+for(i in colnames(all_data)){
+		print(paste0(i," ",sum(is.na(all_data[i]))))}
+
+		nrow(all_data[-(1:nrow(train_data)),])
+colnames(cbind.data.frame(all_data[1:nrow(train_data),],"Loan_Status" = train_data[,ncol(train_data)]))
+
+#cbind.data.frame(all_data[1:nrow(train_data),],"Loan_Status" = c#(train_data[,ncol(train_data)],rep(NA_character_,(nrow(all_data)-nrow#(train_data)))))
+
+data<-cbind.data.frame(all_data[1:nrow(train_data),],"Loan_Status" = train_data[,ncol(train_data)]) 
+## the train data with the average values using the 
+#test data attributes to calculate the average values as well
+#now well run knn on this train data as the input data
+
