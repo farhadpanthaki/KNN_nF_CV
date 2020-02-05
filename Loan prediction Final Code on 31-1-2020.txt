@@ -45,7 +45,7 @@ data<-cbind.data.frame(all_data[1:nrow(train_data),],"Loan_Status" = train_data[
 mode<-function(x)return(names(which.max(table(x))))
 n<-5
 
-k<-c(1,11,3,9,7,5)
+k<-seq(1,23,2)
 
 data<-data[-1]
 
