@@ -68,7 +68,7 @@ cols_w_char<-NULL
 	print(paste(levels(as.factor(data[,cols_w_char[i]]))))}
 
  for(i in cols_w_char){
-		data[,i]<-as.integer(as.factor(data[,i]))}
+		data[,i]<-as.numeric(as.factor(data[,i]))}
 
 #Implement Normalize
 for(i in 1:ncol(data)){if(is.numeric(data[,i])){
